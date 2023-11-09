@@ -21,19 +21,26 @@ export async function POST(req: Request) {
   }
   const image_url = await generateImage(image_description);
   if (!image_url) {
-    return new NextResponse("Failed to generate image", { status: 500 });
-  }
-  const note_ids = await db
-    .insert($notes)
-    .values({
-      name,
-      userId,
-      imageUrl: image_url,
-    })
-    .returning({
-      insertedId: $notes.id,
+    return new NextResponse("Failed to generate image, API ERROR!", {
+      status: 500,
     });
-  return NextResponse.json({
-    note_id: note_ids[0].insertedId,
-  });
+  }
+  try {
+    const note_ids = await db
+      .insert($notes)
+      .values({
+        name,
+        userId,
+        imageUrl: image_url,
+      })
+      .returning({
+        insertedId: $notes.id,
+      });
+    return NextResponse.json({
+      note_id: note_ids[0].insertedId,
+    });
+  } catch (error: any) {
+    console.log(error.message);
+    return new NextResponse("Failed TO Generate New Image", error);
+  }
 }

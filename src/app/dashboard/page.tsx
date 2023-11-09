@@ -9,6 +9,7 @@ import CreateNotesDialog from "@/components/CreateNotesDialog";
 import { db } from "@/lib/db";
 import { $notes } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import Image from "next/image";
 type Props = {};
 
 const page = async (props: Props) => {
@@ -50,7 +51,7 @@ const page = async (props: Props) => {
               return (
                 <a href={`/notes/${note.id}`} key={note.id}>
                   <div className=" border-stone-200 rounded-lg overflow-hidden flex flec-col hover:shadow-xl transition hover:-translate-y-1">
-                    <img
+                    <Image
                       width={400}
                       height={200}
                       alt={note.name}

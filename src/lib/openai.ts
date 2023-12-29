@@ -1,7 +1,7 @@
 import { Configuration, OpenAIApi } from "openai-edge";
 
 const config = new Configuration({
-  apiKey: process.env.OPENAI_KEY,
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 const openai = new OpenAIApi(config);
@@ -14,18 +14,18 @@ export async function generateImagePrompt(name: string) {
         {
           role: "system",
           content:
-            "You are a creative ai assistant help me generate creative ai thumnail, you output will be fetched in the dalle image generator so make the description good and related to the name i will give to you.",
+            "You are an creative and helpful AI assistance capable of generating interesting thumbnail descriptions for my notes. Your output will be fed into the DALLE API to generate a thumbnail. The description should be minimalistic and flat styled",
         },
         {
           role: "user",
-          content: `Please Generate a thumbnail for description for my notebook titles ${name}`,
+          content: `Please generate a thumbnail description for my notebook titles ${name}`,
         },
       ],
     });
     const data = await response.json();
     const image_description = data.choices[0].message.content;
     return image_description as string;
-  } catch (error: any) {
+  } catch (error) {
     console.log(error);
     throw error;
   }
@@ -42,6 +42,6 @@ export async function generateImage(image_description: string) {
     const image_url = data.data[0].url;
     return image_url as string;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }

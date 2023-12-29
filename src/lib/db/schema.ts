@@ -1,4 +1,4 @@
-import { text, pgTable, serial, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 export const $notes = pgTable("notes", {
   id: serial("id").primaryKey(),
@@ -10,3 +10,6 @@ export const $notes = pgTable("notes", {
 });
 
 export type NoteType = typeof $notes.$inferInsert;
+
+// drizzle-orm
+// drizzle-kit

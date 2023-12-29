@@ -7,10 +7,11 @@ type Props = {
 };
 
 const queryClient = new QueryClient();
-const Providers = ({ children }: Props) => {
+
+const Provider = ({ children }: Props) => {
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 };
 
-export default Providers;
+export default Provider;

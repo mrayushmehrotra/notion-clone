@@ -5,16 +5,16 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const body = req.json();
-    const { noteId, editorState } = body;
+    const body = await req.json();
+    let { noteId, editorState } = body;
     if (!editorState || !noteId) {
-      return new NextResponse("Missing editor State or id");
+      return new NextResponse("Missing editorState or noteId", { status: 400 });
     }
+
     noteId = parseInt(noteId);
     const notes = await db.select().from($notes).where(eq($notes.id, noteId));
-
     if (notes.length != 1) {
-      return new NextResponse("Falied to Update", { status: 500 });
+      return new NextResponse("failed to update", { status: 500 });
     }
 
     const note = notes[0];
@@ -32,11 +32,13 @@ export async function POST(req: Request) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
-    console.log(error);
-    return NextResponse.json({
-      success: false,
-      message: "Internal Sever Error",
-    });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      {
+        success: false,
+      },
+      { status: 500 }
+    );
   }
 }

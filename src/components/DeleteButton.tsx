@@ -14,27 +14,28 @@ const DeleteButton = ({ noteId }: Props) => {
   const router = useRouter();
   const deleteNote = useMutation({
     mutationFn: async () => {
-      const response = await axios.post("/api/deleteNote", { noteId });
+      const response = await axios.post("/api/deleteNote", {
+        noteId,
+      });
       return response.data;
     },
   });
   return (
     <Button
-      size="sm"
       variant={"destructive"}
-      disabled={deleteNote.isPending}
+      size="sm"
+      disabled={deleteNote.isLoading}
       onClick={() => {
-        const confirm = window.confirm("Are you sure to delete this notebook");
-        if (!confirm) {
-          return;
-        }
+        const confirm = window.confirm(
+          "Are you sure you want to delete this note?"
+        );
+        if (!confirm) return;
         deleteNote.mutate(undefined, {
           onSuccess: () => {
             router.push("/dashboard");
           },
-          onError: (error) => {
-            console.log(error);
-            window.alert("Something Went Wrong");
+          onError: (err) => {
+            console.error(err);
           },
         });
       }}

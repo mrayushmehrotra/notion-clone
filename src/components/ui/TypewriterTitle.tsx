@@ -1,24 +1,25 @@
 "use client";
 import React from "react";
-import TypeWriter from "typewriter-effect";
+import Typewriter from "typewriter-effect";
+
 type Props = {};
 
-const typeWriterTitle = (props: Props) => {
+const TypewriterTitle = (props: Props) => {
   return (
-    <TypeWriter
+    <Typewriter
       options={{
         loop: true,
       }}
       onInit={(typewriter) => {
         typewriter
           .typeString("🚀 Supercharged Productivity.")
-          .start()
           .pauseFor(1000)
           .deleteAll()
-          .typeString("🤖 AI-Powered Insights");
+          .typeString("🤖 AI-Powered Insights.")
+          .start();
       }}
     />
   );
 };
 
-export default typeWriterTitle;
+export default TypewriterTitle;

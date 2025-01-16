@@ -14,6 +14,7 @@ import axios from "axios";
 import { Button } from "./ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 type Props = {};
 
@@ -44,7 +45,9 @@ const CreateNoteDialog = (props: Props) => {
 
     createNotebook.mutate(undefined, {
       onSuccess: ({ note_id }) => {
-        console.log("Created new note:", { note_id });
+        toast.success(`Created new note: ${note_id} `, {
+          icon: "🎉",
+        });
 
         router.push(`/notebook/${note_id}`);
       },

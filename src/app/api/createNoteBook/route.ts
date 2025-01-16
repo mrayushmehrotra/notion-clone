@@ -4,6 +4,7 @@ import { $notes } from "@/lib/db/schema";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 import { createClient } from "pexels";
+import toast from "react-hot-toast";
 
 const PEXELS_API_KEY = process.env.PEXEL_API_KEY;
 
@@ -29,10 +30,11 @@ async function getImageFromPexels(query: string): Promise<string | null> {
     if (imageSearch.photos.length > 0) {
       // Return the original image URL
       const result: PexelsImage = imageSearch.photos[0].src;
-      console.log(result);
+
       return result.original; // This is the original image URL
     } else {
       console.log("No image found for the query:", query);
+
       return null;
     }
   } catch (error) {

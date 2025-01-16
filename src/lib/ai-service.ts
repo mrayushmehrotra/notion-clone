@@ -11,10 +11,9 @@ export async function generateImagePrompt(name: string): Promise<string> {
       "You are a creative and helpful AI assistant capable of generating interesting thumbnail descriptions for my notes. Your output will be fed into the GOOGLE GEMINI API to generate a thumbnail. The description should be minimalistic and flat styled";
     const prompt2 = `Please generate a thumbnail description for my notebook titles ${name}`;
     const res = await model.generateContent(prompt1 + prompt2);
-    console.log(res);
 
     const image_description = res.response.text();
-    console.log(image_description);
+
     return image_description as string;
   } catch (error) {
     console.log(error);

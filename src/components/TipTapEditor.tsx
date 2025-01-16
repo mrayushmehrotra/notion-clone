@@ -10,6 +10,7 @@ import Text from "@tiptap/extension-text";
 import axios from "axios";
 import { NoteType } from "@/lib/db/schema";
 import { useCompletion } from "ai/react";
+import toast from "react-hot-toast";
 
 type Props = { note: NoteType };
 
@@ -20,6 +21,9 @@ const TipTapEditor = ({ note }: Props) => {
   const { complete, completion } = useCompletion({
     api: "/api/completion",
   });
+
+  const [loading, setLoading] = React.useState(false); // Loader state
+
   const saveNote = useMutation({
     mutationFn: async () => {
       const response = await axios.post("/api/saveNote", {
@@ -29,14 +33,35 @@ const TipTapEditor = ({ note }: Props) => {
       return response.data;
     },
   });
+
+  const handleShiftA = async () => {
+    if (!editor) return;
+
+    const prompt = editor.getText().split(" ").slice(-30).join(" ");
+
+    setLoading(true); // Start loader
+    toast.success("AI is thinking...", {
+      icon: "🤔",
+    });
+    try {
+      await complete(prompt);
+      toast.success("AI Updated Text", {
+        icon: "🤖",
+      });
+    } catch (err) {
+      toast.error("something went wrong", {
+        icon: "❌",
+      });
+    } finally {
+      setLoading(false); // Stop loader
+    }
+  };
+
   const customText = Text.extend({
     addKeyboardShortcuts() {
       return {
-        "Shift-a": () => {
-          // take the last 30 words
-          const prompt = this.editor.getText().split(" ").slice(-30).join(" ");
-          console.log(prompt);
-          complete(prompt);
+        "Shift-A": () => {
+          handleShiftA(); // Reuse the same handler
           return true;
         },
       };
@@ -51,6 +76,7 @@ const TipTapEditor = ({ note }: Props) => {
       setEditorState(editor.getHTML());
     },
   });
+
   const lastCompletion = React.useRef("");
 
   React.useEffect(() => {
@@ -62,17 +88,20 @@ const TipTapEditor = ({ note }: Props) => {
 
   const debouncedEditorState = useDebounce(editorState, 500);
   React.useEffect(() => {
-    // save to db
     if (debouncedEditorState === "") return;
     saveNote.mutate(undefined, {
       onSuccess: (data) => {
-        console.log("success update!", data);
+        ("");
       },
       onError: (err) => {
         console.error(err);
+        toast.success("Something went wrong", {
+          icon: "❌",
+        });
       },
     });
   }, [debouncedEditorState]);
+
   return (
     <>
       <div className="flex">
@@ -88,9 +117,15 @@ const TipTapEditor = ({ note }: Props) => {
       <div className="h-4"></div>
       <span className="text-sm">
         Tip: Press{" "}
-        <kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">
-          Shift + A
-        </kbd>{" "}
+        <button onClick={handleShiftA} disabled={loading}>
+          <kbd
+            className={`px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg ${
+              loading ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+            }`}
+          >
+            {loading ? "Loading..." : "Me"}
+          </kbd>{" "}
+        </button>
         for AI autocomplete
       </span>
     </>

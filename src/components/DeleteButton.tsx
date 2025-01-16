@@ -5,6 +5,7 @@ import { Trash } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 type Props = {
   noteId: number;
@@ -27,15 +28,18 @@ const DeleteButton = ({ noteId }: Props) => {
       disabled={deleteNote.isLoading}
       onClick={() => {
         const confirm = window.confirm(
-          "Are you sure you want to delete this note?"
+          "Are you sure you want to delete this note?",
         );
         if (!confirm) return;
         deleteNote.mutate(undefined, {
           onSuccess: () => {
+            toast.success("Note deleted successfully", {
+              icon: "🎉",
+            });
             router.push("/dashboard");
           },
           onError: (err) => {
-            console.error(err);
+            toast.error("something went wrong");
           },
         });
       }}

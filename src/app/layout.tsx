@@ -9,9 +9,31 @@ import MyToaster from "@/components/MyToaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "AIdeation YT",
-  icons: {
-    icon: "/logo.png",
+  title: "Notion Clone - Your Ultimate Workspace",
+  description:
+    "Streamline your workflow with our Notion-inspired workspace. Organize, plan, and collaborate seamlessly.",
+  icons: {},
+  openGraph: {
+    title: "Notion Clone - Your Ultimate Workspace",
+    description:
+      "A Notion-inspired platform to organize your life and work. Plan, write, and collaborate effortlessly.",
+    url: "https://notion-clone-peach-six.vercel.app/",
+    type: "website",
+    images: [
+      {
+        url: "/favicon.ico", // Use the logo for Open Graph
+        width: 512,
+        height: 512,
+        alt: "Notion Clone Logo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Notion Clone - Your Ultimate Workspace",
+    description:
+      "Organize, plan, and collaborate seamlessly with our Notion-inspired app.",
+    images: ["/favicon.ico"], // Use the logo for Twitter as well
   },
 };
 
@@ -24,8 +46,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <head>
-          <link rel="icon" href="/favicon.ico" />{" "}
-          {/* Reference to the favicon */}
+          <link rel="icon" href="/icon.ico" /> {/* Reference to the favicon */}
         </head>
         <body className={inter.className}>
           <MyToaster /> {/* Display the Toaster */}
